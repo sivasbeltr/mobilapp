@@ -34,31 +34,48 @@ class ProjectsList extends StatelessWidget {
       },
     ];
 
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return SizedBox(
       height: 180,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: projects.length,
-        padding: EdgeInsets.zero,
+        padding: const EdgeInsets.symmetric(vertical: 8),
         itemBuilder: (context, index) {
           final project = projects[index];
           final double completion = project['completion'] as double;
           final bool isCompleted = completion >= 1.0;
 
+          // Calculate status color based on completion
+          Color statusColor =
+              isCompleted
+                  ? Colors.green
+                  : completion > 0.5
+                  ? Colors.orange
+                  : Theme.of(context).colorScheme.primary;
+
           return Container(
-            width: 300,
+            width: 280, // Slightly reduced width to prevent overflow
             margin: const EdgeInsets.only(right: 16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               color: Theme.of(context).cardTheme.color,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  spreadRadius: 0.5,
-                  offset: const Offset(0, 2),
-                ),
-              ],
+              border:
+                  isDarkMode
+                      ? Border.all(color: Colors.grey[800]!, width: 1)
+                      : null,
+              boxShadow:
+                  isDarkMode
+                      ? []
+                      : [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          blurRadius: 10,
+                          spreadRadius: 0.5,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
@@ -74,13 +91,62 @@ class ProjectsList extends StatelessWidget {
                       // Project image with status overlay
                       Stack(
                         children: [
-                          Image.asset(
-                            project['image'],
+                          // Project image with fixed height
+                          SizedBox(
                             height: 120,
                             width: double.infinity,
-                            fit: BoxFit.cover,
+                            child: Image.asset(
+                              project['image'],
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  height: 120,
+                                  width: double.infinity,
+                                  color:
+                                      isDarkMode
+                                          ? Theme.of(
+                                            context,
+                                          ).colorScheme.primary.withOpacity(0.2)
+                                          : Theme.of(context)
+                                              .colorScheme
+                                              .primary
+                                              .withOpacity(0.1),
+                                  child: Icon(
+                                    Icons.architecture,
+                                    size: 40,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
+                                );
+                              },
+                            ),
                           ),
-                          // Status indicator
+
+                          // Project completion percentage overlay
+                          Positioned(
+                            bottom: 26, // Position above progress bar
+                            left: 12,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.7),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                '${(completion * 100).toInt()}%',
+                                style: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          // Status indicator with better positioning
                           Positioned(
                             top: 12,
                             right: 12,
@@ -90,11 +156,20 @@ class ProjectsList extends StatelessWidget {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color:
-                                    isCompleted
-                                        ? Colors.green
-                                        : Theme.of(context).colorScheme.primary,
+                                color: statusColor,
                                 borderRadius: BorderRadius.circular(30),
+                                boxShadow:
+                                    isDarkMode
+                                        ? []
+                                        : [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(
+                                              0.1,
+                                            ),
+                                            blurRadius: 4,
+                                            offset: const Offset(0, 1),
+                                          ),
+                                        ],
                               ),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -119,32 +194,41 @@ class ProjectsList extends StatelessWidget {
                               ),
                             ),
                           ),
-                          // Progress bar at bottom of image
+
+                          // Progress bar at bottom of image with smoother appearance
                           Positioned(
                             bottom: 0,
                             left: 0,
                             right: 0,
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(4),
-                                bottomRight: Radius.circular(4),
+                            child: Container(
+                              height:
+                                  8, // Slightly taller for better visibility
+                              decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.3),
                               ),
-                              child: LinearProgressIndicator(
-                                value: completion,
-                                backgroundColor: Colors.black.withOpacity(0.2),
-                                color:
-                                    isCompleted
-                                        ? Colors.green
-                                        : Theme.of(
-                                          context,
-                                        ).colorScheme.secondary,
-                                minHeight: 4,
+                              child: FractionallySizedBox(
+                                widthFactor: completion,
+                                heightFactor: 1.0,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: statusColor,
+                                    borderRadius: BorderRadius.only(
+                                      topRight: Radius.circular(
+                                        isCompleted ? 0 : 2,
+                                      ),
+                                      bottomRight: Radius.circular(
+                                        isCompleted ? 0 : 2,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                      // Project details
+
+                      // Project details with better padding and overflow handling
                       Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: Column(
@@ -152,9 +236,13 @@ class ProjectsList extends StatelessWidget {
                           children: [
                             Text(
                               project['title'],
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 14,
+                                color:
+                                    Theme.of(
+                                      context,
+                                    ).textTheme.titleMedium?.color,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 
+// Base pages
 import '../../pages/home/home_page.dart';
 import '../../pages/offline/offline_home_page.dart';
 import '../../pages/splash/splash_page.dart';
+
+// Content pages
 import '../../pages/news/news_page.dart';
 import '../../pages/news/news_detail_page.dart';
 import '../../pages/events/events_page.dart';
@@ -13,6 +16,19 @@ import '../../pages/ads/ads_page.dart';
 import '../../pages/ads/ad_detail_page.dart';
 import '../../pages/tenders/tenders_page.dart';
 import '../../pages/tenders/tender_detail_page.dart';
+
+// Emergency pages
+import '../../pages/emergency/emergency_page.dart';
+import '../../pages/emergency/earthquake_page.dart';
+import '../../pages/emergency/fire_page.dart';
+import '../../pages/emergency/flood_page.dart';
+import '../../pages/emergency/traffic_accident_page.dart';
+import '../../pages/emergency/first_aid_page.dart';
+import '../../pages/emergency/life_threatening_page.dart';
+
+// Quick links pages
+import '../../pages/contact/contact_page.dart';
+// ...existing imports for other quick link pages...
 
 /// Service for handling navigation throughout the app.
 /// Supports named routes and deep linking.
@@ -46,12 +62,31 @@ class NavigationService {
   static const String tenders = '/tenders';
   static const String tenderDetail = '/tenders/detail';
 
+  // Emergency routes
+  static const String emergency = '/emergency';
+  static const String earthquakeEmergency = '/emergency/earthquake';
+  static const String fireEmergency = '/emergency/fire';
+  static const String floodEmergency = '/emergency/flood';
+  static const String trafficAccidentEmergency = '/emergency/traffic-accident';
+  static const String firstAidEmergency = '/emergency/first-aid';
+  static const String lifeThreateningEmergency = '/emergency/life-threatening';
+
+  // Quick links routes
+  static const String transportation = '/transportation';
+  static const String sendCheck = '/send-check';
+  static const String marriage = '/marriage';
+  static const String contact = '/contact';
+  static const String complaints = '/complaints';
+  static const String water = '/water-service';
+  static const String pharmacy = '/pharmacy';
+
   /// Route generator for the MaterialApp
   static Route<dynamic> onGenerateRoute(RouteSettings settings) {
     final Map<String, dynamic>? args =
         settings.arguments as Map<String, dynamic>?;
 
     switch (settings.name) {
+      // Base routes
       case splash:
         return MaterialPageRoute(
           builder: (_) => const SplashPage(),
@@ -67,6 +102,8 @@ class NavigationService {
           builder: (_) => OfflineHomePage(parameters: args),
           settings: settings,
         );
+
+      // Content routes
       case news:
         return MaterialPageRoute(
           builder: (_) => NewsPage(parameters: args),
@@ -117,6 +154,52 @@ class NavigationService {
           builder: (_) => TenderDetailPage(parameters: args),
           settings: settings,
         );
+
+      // Emergency routes
+      case emergency:
+        return MaterialPageRoute(
+          builder: (_) => EmergencyPage(parameters: args),
+          settings: settings,
+        );
+      case earthquakeEmergency:
+        return MaterialPageRoute(
+          builder: (_) => EarthquakePage(parameters: args),
+          settings: settings,
+        );
+      case fireEmergency:
+        return MaterialPageRoute(
+          builder: (_) => FirePage(parameters: args),
+          settings: settings,
+        );
+      case floodEmergency:
+        return MaterialPageRoute(
+          builder: (_) => FloodPage(parameters: args),
+          settings: settings,
+        );
+      case trafficAccidentEmergency:
+        return MaterialPageRoute(
+          builder: (_) => TrafficAccidentPage(parameters: args),
+          settings: settings,
+        );
+      case firstAidEmergency:
+        return MaterialPageRoute(
+          builder: (_) => FirstAidPage(parameters: args),
+          settings: settings,
+        );
+      case lifeThreateningEmergency:
+        return MaterialPageRoute(
+          builder: (_) => LifeThreateningPage(parameters: args),
+          settings: settings,
+        );
+
+      // Quick links routes - add as implemented
+      case contact:
+        return MaterialPageRoute(
+          builder: (_) => ContactPage(parameters: args),
+          settings: settings,
+        );
+      // Add other quick link routes as they're implemented
+
       default:
         return MaterialPageRoute(
           builder: (_) => const SplashPage(),

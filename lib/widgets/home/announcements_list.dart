@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../core/utils/navigation_service.dart';
 
-/// List of announcements for the home page
+/// Displays recent municipality announcements in a list
 class AnnouncementsList extends StatelessWidget {
   const AnnouncementsList({super.key});
 
@@ -13,179 +13,136 @@ class AnnouncementsList extends StatelessWidget {
         'id': '1',
         'title': 'Su Kesintisi Duyurusu',
         'date': '10 Mayıs 2023',
-        'category': 'Altyapı',
-        'urgent': true,
+        'description':
+            'Şehir merkezi ve çevre mahallelerde bakım çalışması nedeniyle su kesintisi yapılacaktır.',
       },
       {
         'id': '2',
-        'title': 'Yol Çalışması Duyurusu',
-        'date': '12 Mayıs 2023',
-        'category': 'Ulaşım',
-        'urgent': false,
+        'title': 'Belediye Hizmet Binası Taşınma Duyurusu',
+        'date': '5 Mayıs 2023',
+        'description': 'Hizmet binamız yeni adresine taşınmıştır.',
       },
       {
         'id': '3',
-        'title': 'Belediye Meclis Toplantısı',
-        'date': '15 Mayıs 2023',
-        'category': 'Yönetim',
-        'urgent': false,
+        'title': 'Sokak Hayvanları Aşılama Kampanyası',
+        'date': '1 Mayıs 2023',
+        'description':
+            'Sokak hayvanları için aşılama kampanyası başlatılmıştır.',
       },
     ];
-    
-    return ListView.builder(
+
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+    return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(0),
       itemCount: announcements.length,
+      separatorBuilder:
+          (context, index) => Divider(
+            height: 1,
+            thickness: 1,
+            color: isDarkMode ? Colors.grey[800] : Colors.grey[200],
+            indent: 16,
+            endIndent: 16,
+          ),
       itemBuilder: (context, index) {
         final announcement = announcements[index];
-        final bool isUrgent = announcement['urgent'] ?? false;
-        
-        return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardTheme.color,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 5,
-                spreadRadius: 0.5,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              borderRadius: BorderRadius.circular(12),
-              onTap: () {
-                NavigationService.navigateTo(
-                  NavigationService.announcementDetail,
-                  arguments: announcement,
-                );
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Row(
-                  children: [
-                    // Category Icon with background
-                    Container(
-                      width: 54,
-                      height: 54,
-                      decoration: BoxDecoration(
-                        color: isUrgent 
-                            ? Theme.of(context).colorScheme.secondary.withOpacity(0.2) 
-                            : Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Center(
-                        child: Icon(
-                          _getCategoryIcon(announcement['category']),
-                          color: isUrgent 
-                              ? Theme.of(context).colorScheme.secondary
-                              : Theme.of(context).colorScheme.primary,
-                          size: 24,
-                        ),
-                      ),
+
+        return Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              NavigationService.navigateTo(
+                NavigationService.announcementDetail,
+                arguments: announcement,
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Announcement icon with date indicator
+                  Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: Theme.of(
+                        context,
+                      ).colorScheme.primary.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
                     ),
-                    const SizedBox(width: 16),
-                    // Announcement details
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              if (isUrgent) ...[
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                  decoration: BoxDecoration(
-                                    color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(4),
-                                  ),
-                                  child: Text(
-                                    'Acil',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context).colorScheme.secondary,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 6),
-                              ],
-                              Text(
-                                announcement['category'],
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Theme.of(context).textTheme.bodySmall?.color,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            announcement['title'],
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 15,
-                              color: isUrgent
-                                  ? Theme.of(context).colorScheme.secondary
-                                  : null,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.calendar_today,
-                                size: 12,
-                                color: Theme.of(context).textTheme.bodySmall?.color,
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                announcement['date'],
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Theme.of(context).textTheme.bodySmall?.color,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Arrow icon
-                    Icon(
-                      Icons.chevron_right,
+                    child: Icon(
+                      Icons.campaign,
                       color: Theme.of(context).colorScheme.primary,
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(width: 12),
+                  // Announcement content
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          announcement['title'],
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color:
+                                Theme.of(context).textTheme.titleMedium?.color,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          announcement['description'],
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Theme.of(context).textTheme.bodySmall?.color,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(height: 6),
+                        // Date indicator
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.calendar_today,
+                              size: 12,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              announcement['date'],
+                              style: TextStyle(
+                                fontSize: 11,
+                                color:
+                                    Theme.of(
+                                      context,
+                                    ).textTheme.bodySmall?.color,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  // Right arrow indicator
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 14,
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withOpacity(0.5),
+                  ),
+                ],
               ),
             ),
           ),
         );
       },
     );
-  }
-  
-  IconData _getCategoryIcon(String? category) {
-    switch (category?.toLowerCase()) {
-      case 'altyapı':
-        return Icons.construction;
-      case 'ulaşım':
-        return Icons.directions_car;
-      case 'yönetim':
-        return Icons.groups;
-      case 'kültür':
-        return Icons.theater_comedy;
-      case 'spor':
-        return Icons.sports;
-      default:
-        return Icons.announcement;
-    }
   }
 }

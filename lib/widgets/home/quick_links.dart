@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/utils/navigation_service.dart';
 
 /// Compact, aesthetic quick access icons in a grid layout
 class QuickLinks extends StatelessWidget {
@@ -16,17 +17,17 @@ class QuickLinks extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        'route': '/emergency',
+        'route': NavigationService.emergency,
       },
       {
-        'title': 'Ulaşım Hatları',
+        'title': 'Ulaşım Hizmetleri',
         'icon': Icons.directions_bus_filled_outlined,
         'gradient': const LinearGradient(
           colors: [Color(0xFF16A085), Color(0xFF1ABC9C)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        'route': '/transportation',
+        'route': NavigationService.transportation,
       },
       {
         'title': 'Çek Gönder',
@@ -36,7 +37,7 @@ class QuickLinks extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        'route': '/send-check',
+        'route': NavigationService.sendCheck,
       },
       {
         'title': 'Nikah İşlemleri',
@@ -46,7 +47,7 @@ class QuickLinks extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        'route': '/marriage',
+        'route': NavigationService.marriage,
       },
       {
         'title': 'İletişim',
@@ -56,7 +57,7 @@ class QuickLinks extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        'route': '/contact',
+        'route': NavigationService.contact,
       },
       {
         'title': 'Su Arıza',
@@ -66,17 +67,17 @@ class QuickLinks extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        'route': '/water-service',
+        'route': NavigationService.water,
       },
       {
-        'title': 'Şikayet',
+        'title': 'İstek Şikayet',
         'icon': Icons.rate_review_outlined,
         'gradient': const LinearGradient(
           colors: [Color(0xFFE67E22), Color(0xFFF39C12)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        'route': '/complaints',
+        'route': NavigationService.complaints,
       },
       {
         'title': 'Nöbetçi Eczaneler',
@@ -86,7 +87,7 @@ class QuickLinks extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        'route': '/pharmacy',
+        'route': NavigationService.pharmacy,
       },
     ];
 
@@ -146,8 +147,8 @@ class QuickLinks extends StatelessWidget {
     final words = linkData['title'].toString().split(' ');
     return GestureDetector(
       onTap: () {
-        // TODO: Navigate to route
-        debugPrint('Navigating to ${linkData['route']}');
+        // Navigate to the route
+        NavigationService.navigateTo(linkData['route']);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
