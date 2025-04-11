@@ -30,6 +30,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/belediye_logo.png
+    - assets/images/sivas_placeholder.jpg
   
   # Add Roboto font
   fonts:

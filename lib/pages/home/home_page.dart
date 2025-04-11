@@ -26,29 +26,29 @@ class _HomePageState extends State<HomePage> {
   // List of main features for the home page
   final List<Map<String, dynamic>> _features = [
     {
-      'title': 'Duyurular', 
-      'icon': Icons.campaign, 
-      'route': NavigationService.announcements
+      'title': 'Duyurular',
+      'icon': Icons.campaign,
+      'route': NavigationService.announcements,
     },
     {
-      'title': 'Haberler', 
-      'icon': Icons.article, 
-      'route': NavigationService.news
+      'title': 'Haberler',
+      'icon': Icons.article,
+      'route': NavigationService.news,
     },
     {
-      'title': 'Etkinlikler', 
-      'icon': Icons.event, 
-      'route': NavigationService.events
+      'title': 'Etkinlikler',
+      'icon': Icons.event,
+      'route': NavigationService.events,
     },
     {
-      'title': 'İlanlar', 
-      'icon': Icons.description, 
-      'route': NavigationService.ads
+      'title': 'İlanlar',
+      'icon': Icons.description,
+      'route': NavigationService.ads,
     },
     {
-      'title': 'İhale İlanları', 
-      'icon': Icons.gavel, 
-      'route': NavigationService.tenders
+      'title': 'İhale İlanları',
+      'icon': Icons.gavel,
+      'route': NavigationService.tenders,
     },
     {
       'title': 'Ulaşım',
@@ -59,13 +59,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return BasePage(
-      title: 'Sivas Belediyesi',
-      offlineAccessible: false,
-      parameters: widget.parameters,
-      appBar: const HomeAppBar(),
-      body: _buildBody(),
-    );
+    return Scaffold(appBar: const HomeAppBar(), body: _buildBody());
   }
 
   Widget _buildBody() {
@@ -85,13 +79,13 @@ class _HomePageState extends State<HomePage> {
                 padding: EdgeInsets.fromLTRB(16, 16, 16, 0),
                 child: FeaturedBanner(),
               ),
-              
+
               // Quick links
               const Padding(
                 padding: EdgeInsets.fromLTRB(16, 24, 16, 0),
                 child: QuickLinks(),
               ),
-              
+
               // Services section
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
@@ -102,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              
+
               // Announcements section
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
@@ -112,12 +106,15 @@ class _HomePageState extends State<HomePage> {
                       title: 'Güncel Duyurular',
                       action: TextButton.icon(
                         onPressed: () {
-                          NavigationService.navigateTo(NavigationService.announcements);
+                          NavigationService.navigateTo(
+                            NavigationService.announcements,
+                          );
                         },
                         icon: const Icon(Icons.arrow_forward, size: 16),
                         label: const Text('Tümü'),
                         style: TextButton.styleFrom(
-                          foregroundColor: Theme.of(context).colorScheme.primary,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.primary,
                           visualDensity: VisualDensity.compact,
                         ),
                       ),
@@ -126,7 +123,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              
+
               // Projects section
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
@@ -142,7 +139,8 @@ class _HomePageState extends State<HomePage> {
                         icon: const Icon(Icons.arrow_forward, size: 16),
                         label: const Text('Tümü'),
                         style: TextButton.styleFrom(
-                          foregroundColor: Theme.of(context).colorScheme.primary,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.primary,
                           visualDensity: VisualDensity.compact,
                         ),
                       ),
@@ -161,12 +159,15 @@ class _HomePageState extends State<HomePage> {
                       title: 'Etkinlikler',
                       action: TextButton.icon(
                         onPressed: () {
-                          NavigationService.navigateTo(NavigationService.events);
+                          NavigationService.navigateTo(
+                            NavigationService.events,
+                          );
                         },
                         icon: const Icon(Icons.arrow_forward, size: 16),
                         label: const Text('Tümü'),
                         style: TextButton.styleFrom(
-                          foregroundColor: Theme.of(context).colorScheme.primary,
+                          foregroundColor:
+                              Theme.of(context).colorScheme.primary,
                           visualDensity: VisualDensity.compact,
                         ),
                       ),
@@ -175,7 +176,7 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              
+
               // App info section
               _buildFooter(),
             ],
@@ -184,7 +185,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-  
+
   Widget _buildFooter() {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -227,7 +228,7 @@ class _HomePageState extends State<HomePage> {
             ),
             const SizedBox(height: 4),
             Text(
-              '© 2023 Tüm Hakları Saklıdır',
+              '© ${DateTime.now().year} Tüm Hakları Saklıdır',
               style: TextStyle(
                 fontSize: 12,
                 color: Theme.of(context).textTheme.bodySmall?.color,
