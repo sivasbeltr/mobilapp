@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../client/models/emergency_contact.dart';
+import '../../client/models/emergency_procedure.dart';
 import '../../client/services/connectivity_service.dart';
 import '../../core/utils/navigation_service.dart';
 import '../../core/widgets/base_page.dart';
+import '../../widgets/emergency/emergency_contact_card.dart';
+import '../../widgets/emergency/emergency_procedure_card.dart';
 
 /// Offline home page shown when there is no internet connection
 class OfflineHomePage extends StatelessWidget {
@@ -24,95 +28,102 @@ class OfflineHomePage extends StatelessWidget {
   }
 
   Widget _buildOfflineContent(BuildContext context) {
-    return Center(
+    return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Icon(Icons.wifi_off, size: 80, color: Colors.grey),
+            _buildConnectionStatusBanner(context),
             const SizedBox(height: 24),
-            Text(
-              'İnternet Bağlantısı Yok',
-              style: Theme.of(context).textTheme.headlineMedium,
-              textAlign: TextAlign.center,
-            ),
+            _buildSectionTitle(context, 'Acil Durum Numaraları'),
+            const SizedBox(height: 8),
+            _buildEmergencyContactsGrid(context),
+            const SizedBox(height: 24),
+            _buildSectionTitle(context, 'Acil Durumlarda Yapılması Gerekenler'),
+            const SizedBox(height: 8),
+            _buildEmergencyProceduresList(context),
             const SizedBox(height: 16),
-            Text(
-              'İnternet bağlantınız olmadığı için uygulamanın sınırlı özelliklerine erişebilirsiniz. Tam özellikler için lütfen internet bağlantınızı kontrol ediniz.',
-              style: Theme.of(context).textTheme.bodyLarge,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 32),
-            _buildOfflineFeatures(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildOfflineFeatures(BuildContext context) {
-    // List of features available offline
-    final offlineFeatures = [
-      {'title': 'Acil Numaralar', 'icon': Icons.phone},
-      {'title': 'Kaydedilmiş Belgeler', 'icon': Icons.description},
-      {'title': 'Çevrimdışı Harita', 'icon': Icons.map},
-    ];
+  Widget _buildConnectionStatusBanner(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.error.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.error,
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          const Icon(Icons.wifi_off, color: Colors.grey, size: 32),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'İnternet Bağlantısı Yok',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Acil durum bilgilerine ve numaralarına çevrimdışı erişebilirsiniz.',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
+  Widget _buildSectionTitle(BuildContext context, String title) {
+    return Text(
+      title,
+      style: Theme.of(
+        context,
+      ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+    );
+  }
+
+  Widget _buildEmergencyContactsGrid(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 3,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
+        crossAxisSpacing: 12,
+        mainAxisSpacing: 12,
+        childAspectRatio: 0.8,
       ),
-      itemCount: offlineFeatures.length,
+      itemCount: emergencyContacts.length,
       itemBuilder: (context, index) {
-        final feature = offlineFeatures[index];
-        return _buildOfflineFeatureCard(
-          context,
-          title: feature['title'] as String,
-          icon: feature['icon'] as IconData,
-          onTap: () {
-            // Navigate to offline feature
-            // This would be implemented later
-          },
-        );
+        final contact = emergencyContacts[index];
+        return EmergencyContactCard(contact: contact);
       },
     );
   }
 
-  Widget _buildOfflineFeatureCard(
-    BuildContext context, {
-    required String title,
-    required IconData icon,
-    required VoidCallback onTap,
-  }) {
-    return Card(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 32,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                style: const TextStyle(fontSize: 12),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-        ),
-      ),
+  Widget _buildEmergencyProceduresList(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: emergencyProcedures.length,
+      itemBuilder: (context, index) {
+        final procedure = emergencyProcedures[index];
+        return EmergencyProcedureCard(procedure: procedure);
+      },
     );
   }
 
