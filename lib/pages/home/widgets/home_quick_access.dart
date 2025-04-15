@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:sivas_belediyesi/client/models/deputy_mayor_model.dart';
+import 'package:sivas_belediyesi/pages/deputy_mayor/deputy_mayor_list_page.dart';
 import 'package:sivas_belediyesi/pages/send_check/send_check_page.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../pages/emergency/emergency_page.dart';
@@ -88,7 +90,10 @@ class _HomeQuickAccessState extends State<HomeQuickAccess> {
         label: 'Su İşlemleri',
         color: Colors.lightBlue,
         onTap: () {
-          // TODO: Navigate to water services page
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const DeputyMayorListPage()));
         },
       ),
       _QuickAccessItem(
@@ -111,9 +116,7 @@ class _HomeQuickAccessState extends State<HomeQuickAccess> {
         icon: Icons.article,
         label: 'Haberler',
         color: AppColors.primary,
-        onTap: () {
-          // TODO: Navigate to news page
-        },
+        onTap: () {},
       ),
     ];
 

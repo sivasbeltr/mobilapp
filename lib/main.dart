@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'client/services/http_client_service.dart';
 import 'core/services/notification_message.dart';
 import 'core/theme/app_theme.dart';
 import 'pages/events/detail/event_detail_page.dart';
@@ -18,10 +17,6 @@ void main() async {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
-
-  // Initialize the HTTP client
-  final httpClient = HttpClientService();
-  httpClient.init();
 
   // Load saved theme preference
   final prefs = await SharedPreferences.getInstance();

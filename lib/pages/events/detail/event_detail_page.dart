@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../client/services/http_client_service.dart';
 import '../../../core/theme/app_colors.dart';
 
 /// Displays the details of an event.
@@ -15,7 +14,6 @@ class EventDetailPage extends StatefulWidget {
 }
 
 class _EventDetailPageState extends State<EventDetailPage> {
-  final HttpClientService _httpClient = HttpClientService();
   bool _isLoading = true;
   String _title = '';
   String _description = '';

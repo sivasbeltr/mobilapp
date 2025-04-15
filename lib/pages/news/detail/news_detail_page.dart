@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../client/services/http_client_service.dart';
 import '../../../core/theme/app_colors.dart';
 
 /// Displays the details of a news article.
@@ -15,7 +14,6 @@ class NewsDetailPage extends StatefulWidget {
 }
 
 class _NewsDetailPageState extends State<NewsDetailPage> {
-  final HttpClientService _httpClient = HttpClientService();
   bool _isLoading = true;
   String _title = '';
   String _content = '';

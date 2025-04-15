@@ -1,5 +1,3 @@
-import '../../client/services/http_client_service.dart';
-
 /// Represents an item in the carousel on the home page.
 class CarouselItem {
   /// The image URL of the carousel item.
@@ -98,8 +96,6 @@ class EventItem {
 
 /// Manages the state of the home page.
 class HomePageState {
-  final HttpClientService _httpClient = HttpClientService();
-
   /// The items to display in the carousel.
   List<CarouselItem> carouselItems = [];
 
