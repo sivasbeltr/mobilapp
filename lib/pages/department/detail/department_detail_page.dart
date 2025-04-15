@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:html_unescape/html_unescape.dart';
 
-import '../../../client/models/department_detail_model.dart';
 import '../../../client/services/department_service.dart';
 import '../../../core/widgets/pages_app_bar.dart';
 import 'department_detail_page_state.dart';
-import 'widgets/contact_info_widget.dart';
 import 'widgets/department_header_widget.dart';
 import 'widgets/personnel_info_widget.dart';
 import 'widgets/sublist_info_widget.dart';
@@ -96,7 +93,7 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Personnel information
+                        // Personnel information with contact info integrated
                         if (department.personnel != null) ...[
                           PersonnelInfoWidget(department: department),
                           const SizedBox(height: 20),
@@ -105,14 +102,6 @@ class _DepartmentDetailPageState extends State<DepartmentDetailPage> {
                         // Sublist information (duties, regulations)
                         if (department.sublist.isNotEmpty) ...[
                           SublistInfoWidget(department: department),
-                          const SizedBox(height: 20),
-                        ],
-
-                        // Contact information
-                        if (department.personnel != null &&
-                            (department.phone != null ||
-                                department.email != null)) ...[
-                          ContactInfoWidget(department: department),
                           const SizedBox(height: 20),
                         ],
                       ],

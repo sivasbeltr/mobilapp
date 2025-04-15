@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:sivas_belediyesi/pages/meclis/meclis_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../department/department_list_page.dart';
 import '../../deputy_mayor/deputy_mayor_list_page.dart';
+import '../../encumen/encumen_page.dart';
+import '../../mayor/mayor_page.dart';
+import 'shared_section_styles.dart';
 
 /// A widget that displays the corporate section on the home page.
 class HomeCorporateSection extends StatelessWidget {
@@ -18,20 +23,44 @@ class HomeCorporateSection extends StatelessWidget {
       CorporateMenuItem(
         title: 'Başkanımız',
         icon: Icons.person,
-        route: '/baskan',
+        route: '',
         color: const Color(0xFF1565C0), // Deep blue
+        onTap: (context) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MayorPage(),
+            ),
+          );
+        },
       ),
       CorporateMenuItem(
         title: 'Belediye Meclisi',
         icon: Icons.groups,
-        route: '/meclis',
+        route: '',
         color: const Color(0xFF00838F), // Teal
+        onTap: (context) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MeclisPage(),
+            ),
+          );
+        },
       ),
       CorporateMenuItem(
         title: 'Encümen',
-        icon: Icons.group_work,
-        route: '/encumen',
+        icon: Icons.groups,
+        route: '',
         color: const Color(0xFF2E7D32), // Green
+        onTap: (context) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const EncumenPage(),
+            ),
+          );
+        },
       ),
       CorporateMenuItem(
         title: 'Başkan Yardımcıları',
@@ -70,65 +99,30 @@ class HomeCorporateSection extends StatelessWidget {
       CorporateMenuItem(
         title: 'Kurumsal Yapı',
         icon: Icons.domain,
-        route: '/kurumsal-yapi',
+        route: '',
         color: const Color(0xFF4527A0), // Deep purple
-      ),
+      )
     ];
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(10),
-            blurRadius: 8,
-            spreadRadius: 0,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+    return SharedSectionContainer(
+      title: 'Kurumsal',
+      icon: Icons.business_center,
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                'Kurumsal',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: isDark
-                      ? AppColors.textPrimaryDark
-                      : AppColors.textPrimaryLight,
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            // Grid of menu items
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 3,
-                  childAspectRatio: 0.85,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                ),
-                itemCount: menuItems.length,
-                itemBuilder: (context, index) {
-                  final item = menuItems[index];
-                  return _buildMenuItem(context, item, isDark);
-                },
-              ),
-            ),
-          ],
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            childAspectRatio: 0.88,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
+          ),
+          itemCount: menuItems.length,
+          itemBuilder: (context, index) {
+            final item = menuItems[index];
+            return _buildMenuItem(context, item, isDark);
+          },
         ),
       ),
     );
@@ -137,49 +131,17 @@ class HomeCorporateSection extends StatelessWidget {
   /// Builds a menu item with icon and label.
   Widget _buildMenuItem(
       BuildContext context, CorporateMenuItem item, bool isDark) {
-    return Container(
-      width: 70,
-      margin: const EdgeInsets.symmetric(horizontal: 4),
-      child: GestureDetector(
-        onTap: () {
-          if (item.onTap != null) {
-            item.onTap!(context);
-          } else if (item.route.isNotEmpty) {
-            Navigator.of(context).pushNamed(item.route);
-          }
-        },
-        child: Column(
-          children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: item.color.withAlpha(30),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                item.icon,
-                size: 30,
-                color: item.color,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              item.title,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: isDark
-                    ? AppColors.textPrimaryDark
-                    : AppColors.textPrimaryLight,
-              ),
-              textAlign: TextAlign.center,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-          ],
-        ),
-      ),
+    return SharedGridItem(
+      icon: item.icon,
+      title: item.title,
+      color: item.color,
+      onTap: () {
+        if (item.onTap != null) {
+          item.onTap!(context);
+        } else if (item.route.isNotEmpty) {
+          Navigator.of(context).pushNamed(item.route);
+        }
+      },
     );
   }
 }

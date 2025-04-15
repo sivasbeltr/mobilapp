@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../home_page_state.dart';
+import 'shared_section_styles.dart';
 
 /// A section displaying municipal services in a visually appealing grid layout.
 class HomeServicesSection extends StatelessWidget {
@@ -15,126 +16,46 @@ class HomeServicesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(10),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+    return SharedSectionContainer(
+      title: 'Belediye Hizmetleri',
+      icon: Icons.miscellaneous_services,
+      trailing: TextButton(
+        onPressed: () {
+          // TODO: Navigate to all services page
+        },
+        child: const Text('Tümü'),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Belediye Hizmetleri',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  // TODO: Navigate to all services page
-                },
-                child: const Text('Tümü'),
-              ),
-            ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3,
+            childAspectRatio: 0.88,
+            crossAxisSpacing: 12,
+            mainAxisSpacing: 12,
           ),
-          const SizedBox(height: 16),
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, // Changed to 3 columns
-              childAspectRatio:
-                  0.85, // Adjusted aspect ratio for more square-ish appearance
-              crossAxisSpacing: 12,
-              mainAxisSpacing: 16,
-            ),
-            itemCount: services.length > 9
-                ? 9
-                : services.length, // Show up to 9 items (3 rows of 3)
-            itemBuilder: (context, index) {
-              return _buildServiceItem(context, services[index]);
-            },
-          ),
-        ],
+          itemCount: services.length > 9
+              ? 9
+              : services.length, // Show up to 9 items (3 rows of 3)
+          itemBuilder: (context, index) {
+            return _buildServiceItem(context, services[index]);
+          },
+        ),
       ),
     );
   }
 
   /// Builds a service item with icon on top and text at the bottom.
   Widget _buildServiceItem(BuildContext context, ServiceItem service) {
-    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
-
-    return GestureDetector(
+    return SharedGridItem(
+      icon: _getIconData(service.icon),
+      title: service.name,
+      color: AppColors.primary,
       onTap: () {
         // TODO: Navigate to service route
       },
-      child: Container(
-        decoration: BoxDecoration(
-          color: isDarkTheme
-              ? AppColors.surfaceDark.withAlpha(120)
-              : AppColors.primaryContainer.withAlpha(20),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isDarkTheme
-                ? AppColors.primary.withAlpha(60)
-                : AppColors.primary.withAlpha(30),
-            width: 1,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Service icon
-            Container(
-              width: 48, // Slightly smaller icon container
-              height: 48,
-              decoration: BoxDecoration(
-                color: isDarkTheme
-                    ? AppColors.primary.withAlpha(40)
-                    : AppColors.primary.withAlpha(20),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                _getIconData(service.icon),
-                color: AppColors.primary,
-                size: 24, // Slightly smaller icon
-              ),
-            ),
-            const SizedBox(height: 8), // Smaller spacing
-            // Service name
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 4.0), // Less padding
-              child: Text(
-                service.name,
-                style: TextStyle(
-                  fontSize: 12, // Smaller font size
-                  fontWeight: FontWeight.w500,
-                  color: isDarkTheme
-                      ? AppColors.textPrimaryDark
-                      : AppColors.textPrimaryLight,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 
