@@ -11,6 +11,13 @@ class DeputyMayor {
   final List<Contact> contact;
   final List<Manager> managers;
 
+  //add property managerCount
+  int get managerCount => managers.length;
+  //add property email and phone is contact first
+  String? get email => contact.isNotEmpty ? contact[2].eposta : null;
+  String? get phone => contact.isNotEmpty ? contact[0].phone : null;
+  String? get phoneExt => contact.isNotEmpty ? contact[1].phoneExt : null;
+
   DeputyMayor({
     required this.id,
     required this.url,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../core/theme/app_colors.dart';
 import 'home_page_state.dart';
 import 'widgets/home_app_bar.dart';
+import 'widgets/home_corporate_section.dart';
 import 'widgets/home_page_carousel.dart';
 import 'widgets/home_quick_access.dart';
 import 'widgets/home_services_section.dart';
@@ -59,6 +60,11 @@ class _HomePageState extends State<HomePage> {
 
         // Quick access section
         const HomeQuickAccess(),
+
+        const SizedBox(height: 16),
+
+        // Corporate section (Kurumsal)
+        const HomeCorporateSection(),
 
         const SizedBox(height: 16),
 

@@ -5,6 +5,7 @@ import 'package:sivas_belediyesi/pages/send_check/send_check_page.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../pages/emergency/emergency_page.dart';
 import '../../cityguide/cityguide_page.dart';
+import '../../department/department_list_page.dart';
 import '../../transportation/transportation_page.dart';
 
 /// A quick access section for the home page with essential shortcuts and dynamic scroll indicator.
@@ -89,20 +90,13 @@ class _HomeQuickAccessState extends State<HomeQuickAccess> {
         icon: Icons.water_drop,
         label: 'Su İşlemleri',
         color: Colors.lightBlue,
-        onTap: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const DeputyMayorListPage()));
-        },
+        onTap: () {},
       ),
       _QuickAccessItem(
         icon: Icons.camera_alt,
         label: 'Kent Kameraları',
         color: Colors.indigo,
-        onTap: () {
-          // TODO: Navigate to city cameras page
-        },
+        onTap: () {},
       ),
       _QuickAccessItem(
         icon: Icons.calendar_month,

@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../client/models/deputy_mayor_detail_model.dart';
 import '../../../client/services/deputy_mayor_service.dart';
 import '../../../core/widgets/pages_app_bar.dart';
+import '../../department/detail/department_detail_page.dart';
 import '../../show_image_full_page.dart';
 import 'deputy_mayor_detail_page_state.dart';
 
@@ -40,7 +41,18 @@ class _DeputyMayorDetailPageState extends State<DeputyMayorDetailPage> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: const PagesAppBar(title: 'Başkan Yardımcısı Detay'),
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AnimatedBuilder(
+          animation: _pageState,
+          builder: (context, _) {
+            final detail = _pageState.detail;
+            return PagesAppBar(
+              title: detail?.title ?? 'Başkan Yardımcısı Detay',
+            );
+          },
+        ),
+      ),
       body: AnimatedBuilder(
         animation: _pageState,
         builder: (context, _) {
@@ -75,102 +87,33 @@ class _DeputyMayorDetailPageState extends State<DeputyMayorDetailPage> {
               detail.content.replaceAll(RegExp(r'<(?!p|/p)[^>]+>'), '');
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Photo and info section
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Photo with full-screen tap
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ShowImageFullPage(
-                                imageUrl: detail.photo,
-                                title: detail.title // Can be null
-                                ),
-                          ),
-                        );
-                      },
-                      child: Hero(
-                        tag: 'deputy_photo_${detail.id}',
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: CachedNetworkImage(
-                            imageUrl: detail.photo,
-                            width: 120,
-                            height: 160,
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(
-                              width: 120,
-                              height: 160,
-                              color: theme.colorScheme.surfaceVariant,
-                              child: const Center(
-                                  child: CircularProgressIndicator()),
-                            ),
-                            errorWidget: (context, url, error) => Container(
-                              width: 120,
-                              height: 160,
-                              color: theme.colorScheme.surfaceVariant,
-                              child: Icon(Icons.person,
-                                  size: 60,
-                                  color:
-                                      theme.colorScheme.primary.withAlpha(100)),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    // Name, title, and contact
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            detail.title,
-                            style: theme.textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                // Enhanced photo and info section
+                _buildHeaderSection(context, detail),
 
-                          const SizedBox(height: 16),
-                          // Contact info
-                          if (detail.contact.isNotEmpty)
-                            _ContactInfoWidget(contact: detail.contact.first),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 24),
                 // Content (cleaned HTML)
-                Html(
-                  data: cleanedContent,
-                  style: {
-                    'p': Style(
-                      fontSize: FontSize.medium,
-                      color: theme.colorScheme.onSurface,
-                      lineHeight: const LineHeight(1.5),
-                    ),
-                  },
-                ),
-                const SizedBox(height: 24),
-                // Managed departments
-                if (detail.managers.isNotEmpty) ...[
-                  Text(
-                    'Bağlı Müdürlükler',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Html(
+                    data: cleanedContent,
+                    style: {
+                      'p': Style(
+                        fontSize: FontSize.medium,
+                        color: theme.colorScheme.onSurface,
+                        lineHeight: const LineHeight(1.5),
+                        margin: Margins.only(bottom: 16),
+                      ),
+                    },
                   ),
-                  const SizedBox(height: 12),
-                  ...detail.managers.map((m) => _ManagerInfoWidget(manager: m)),
-                ],
+                ),
+
+                // Enhanced managed departments section
+                if (detail.managers.isNotEmpty)
+                  _buildManagedDepartmentsSection(context, detail.managers),
+
+                const SizedBox(height: 24),
               ],
             ),
           );
@@ -178,38 +121,163 @@ class _DeputyMayorDetailPageState extends State<DeputyMayorDetailPage> {
       ),
     );
   }
-}
 
-/// Widget for displaying full-screen image
-class _FullScreenImage extends StatelessWidget {
-  final String imageUrl;
+  /// Builds the enhanced header section with photo and contact information
+  Widget _buildHeaderSection(
+      BuildContext context, DeputyMayorDetailModel detail) {
+    final theme = Theme.of(context);
 
-  const _FullScreenImage({Key? key, required this.imageUrl}) : super(key: key);
+    return Container(
+      color: theme.colorScheme.primaryContainer.withAlpha(50),
+      child: Column(
+        children: [
+          // Top section with image and basic info
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Enhanced photo with shadow and border
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ShowImageFullPage(
+                          imageUrl: detail.photo,
+                          title: detail.title,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Hero(
+                    tag: 'deputy_photo_${detail.id}',
+                    child: Container(
+                      width: 130,
+                      height: 170,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: theme.colorScheme.primary.withAlpha(40),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: CachedNetworkImage(
+                          imageUrl: detail.photo,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Container(
+                            color: theme.colorScheme.surfaceVariant,
+                            child: const Center(
+                                child: CircularProgressIndicator()),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            color: theme.colorScheme.surfaceVariant,
+                            child: Icon(
+                              Icons.person,
+                              size: 60,
+                              color: theme.colorScheme.primary.withAlpha(100),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
-      body: Center(
-        child: Hero(
-          tag: 'deputy_photo_${imageUrl.hashCode}',
-          child: CachedNetworkImage(
-            imageUrl: imageUrl,
-            fit: BoxFit.contain,
-            placeholder: (context, url) => const CircularProgressIndicator(
-              color: Colors.white,
-            ),
-            errorWidget: (context, url, error) => const Icon(
-              Icons.error,
-              color: Colors.white,
-              size: 48,
+                const SizedBox(width: 16),
+
+                // Enhanced name, title, and contact
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        detail.title,
+                        style: theme.textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      // Enhanced contact info
+                      _ContactInfoWidget(detail: detail),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
+
+          // Bottom decoration bar
+          Container(
+            height: 6,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  theme.colorScheme.primary,
+                  theme.colorScheme.primary.withAlpha(120),
+                  theme.colorScheme.primary.withAlpha(0),
+                ],
+                begin: Alignment.centerLeft,
+                end: Alignment.centerRight,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Builds the enhanced managed departments section as a vertical list
+  Widget _buildManagedDepartmentsSection(
+      BuildContext context, List<Manager> managers) {
+    final theme = Theme.of(context);
+
+    return Container(
+      padding: const EdgeInsets.only(top: 16),
+      color: theme.colorScheme.surfaceVariant.withAlpha(30),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.business,
+                  color: theme.colorScheme.primary,
+                  size: 24,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Bağlı Müdürlükler',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          // Manager items in a vertical list
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+            itemCount: managers.length,
+            itemBuilder: (context, index) {
+              return _ManagerListItemWidget(manager: managers[index]);
+            },
+          ),
+        ],
       ),
     );
   }
@@ -217,83 +285,128 @@ class _FullScreenImage extends StatelessWidget {
 
 /// Widget for displaying contact information
 class _ContactInfoWidget extends StatelessWidget {
-  final Contact contact;
+  final DeputyMayorDetailModel detail;
 
-  const _ContactInfoWidget({Key? key, required this.contact}) : super(key: key);
+  const _ContactInfoWidget({required this.detail});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final List<Widget> rows = [];
-    if ((contact.phone ?? '').isNotEmpty) {
+
+    if ((detail.phone ?? '').isNotEmpty) {
       rows.add(
-        GestureDetector(
+        InkWell(
           onTap: () async {
-            final uri = Uri.parse('tel:${contact.phone}');
+            final uri = Uri.parse('tel:${detail.phone}');
             if (await canLaunchUrl(uri)) {
               await launchUrl(uri);
             }
           },
-          child: Row(
-            children: [
-              Icon(Icons.phone, size: 18, color: theme.colorScheme.primary),
-              const SizedBox(width: 8),
-              Text(
-                contact.phone!,
-                style: TextStyle(
-                  color: theme.colorScheme.primary,
-                  decoration: TextDecoration.underline,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withAlpha(20),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.phone,
+                    size: 16,
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    if ((contact.eposta ?? '').isNotEmpty) {
-      rows.add(
-        GestureDetector(
-          onTap: () async {
-            final uri = Uri.parse('mailto:${contact.eposta}');
-            if (await canLaunchUrl(uri)) {
-              await launchUrl(uri);
-            }
-          },
-          child: Row(
-            children: [
-              Icon(Icons.email, size: 18, color: theme.colorScheme.primary),
-              const SizedBox(width: 8),
-              Text(
-                contact.eposta!,
-                style: TextStyle(
-                  color: theme.colorScheme.primary,
-                  decoration: TextDecoration.underline,
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Telefon',
+                        style: theme.textTheme.bodySmall,
+                      ),
+                      Text(
+                        detail.phone!,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                      if (detail.phoneExt != null)
+                        Text(
+                          'Dahili: ${detail.phoneExt}',
+                          style: theme.textTheme.bodySmall,
+                        ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-    if ((contact.address ?? '').isNotEmpty) {
-      rows.add(
-        Row(
-          children: [
-            Icon(Icons.location_on, size: 18, color: theme.colorScheme.primary),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                contact.address!,
-                style: const TextStyle(),
-              ),
+              ],
             ),
-          ],
+          ),
         ),
       );
     }
+
+    if ((detail.email ?? '').isNotEmpty) {
+      rows.add(
+        InkWell(
+          onTap: () async {
+            final uri = Uri.parse('mailto:${detail.email}');
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri);
+            }
+          },
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withAlpha(20),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Icon(
+                    Icons.email,
+                    size: 16,
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'E-posta',
+                        style: theme.textTheme.bodySmall,
+                      ),
+                      Text(
+                        detail.email!,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     if (rows.isEmpty) {
       return const SizedBox();
     }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: rows
@@ -306,70 +419,79 @@ class _ContactInfoWidget extends StatelessWidget {
   }
 }
 
-/// Widget for displaying manager (department) information
-class _ManagerInfoWidget extends StatelessWidget {
+/// Widget for displaying a manager (department) as a list item
+class _ManagerListItemWidget extends StatelessWidget {
   final Manager manager;
 
-  const _ManagerInfoWidget({Key? key, required this.manager}) : super(key: key);
+  const _ManagerListItemWidget({required this.manager});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      margin: const EdgeInsets.only(bottom: 12),
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
       child: InkWell(
-        borderRadius: BorderRadius.circular(12),
         onTap: () {
-          // Optionally navigate to department detail
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  DepartmentDetailPage(apiUrl: manager.apiUrl),
+            ),
+          );
         },
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Small portrait image
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: SizedBox(
+                width: 60,
+                height: 80,
                 child: CachedNetworkImage(
                   imageUrl: manager.photo,
-                  width: 48,
-                  height: 48,
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Container(
-                    width: 48,
-                    height: 48,
-                    color: theme.colorScheme.surfaceVariant,
+                    color: theme.colorScheme.surfaceContainerHighest,
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
                   ),
                   errorWidget: (context, url, error) => Container(
-                    width: 48,
-                    height: 48,
-                    color: theme.colorScheme.surfaceVariant,
+                    color: theme.colorScheme.surfaceContainerHighest,
                     child: Icon(
                       Icons.business,
-                      size: 28,
+                      size: 30,
                       color: theme.colorScheme.primary.withAlpha(100),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  manager.title,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
+            ),
+
+            const SizedBox(width: 12),
+
+            // Department title
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    manager.title,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                ),
+                ],
               ),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

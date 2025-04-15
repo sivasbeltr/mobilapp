@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:sivas_belediyesi/client/models/deputy_mayor_detail_model.dart';
 
+import '../models/deputy_mayor_detail_model.dart';
 import '../models/deputy_mayor_model.dart';
 import 'dio_client.dart';
 
