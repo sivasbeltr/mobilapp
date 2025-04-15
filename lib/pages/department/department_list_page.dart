@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 import '../../client/models/department_model.dart';
 import '../../client/services/department_service.dart';
@@ -191,7 +190,6 @@ class DepartmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       clipBehavior: Clip.antiAlias,
@@ -211,13 +209,15 @@ class DepartmentCard extends StatelessWidget {
             children: [
               // Department icon or placeholder
               Container(
-                width: 60,
-                height: 60,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer.withAlpha(120),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
+                  width: 60,
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primaryContainer.withAlpha(120),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Center(
+                      child: Icon(Icons.business,
+                          size: 32, color: theme.colorScheme.primary))),
 
               const SizedBox(width: 16),
 
@@ -260,77 +260,6 @@ class DepartmentCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-/// A widget that displays HTML icon content.
-class HtmlIconWidget extends StatelessWidget {
-  /// The HTML icon string to display.
-  final String htmlIcon;
-
-  /// Creates a [HtmlIconWidget].
-  const HtmlIconWidget({
-    Key? key,
-    required this.htmlIcon,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    // For simplicity, just extract the icon name from the HTML
-    // This is a basic implementation and might need a more robust solution
-    final iconNameRegex = RegExp(r'fa-([a-z-]+)');
-    final match = iconNameRegex.firstMatch(htmlIcon);
-    final iconName = match?.group(1) ?? 'building';
-
-    // Map common icon names to MaterialIcons
-    // This is a limited mapping that can be expanded as needed
-    IconData iconData;
-    switch (iconName) {
-      case 'house-chimney-crack':
-        iconData = Icons.home_work;
-        break;
-      case 'building':
-        iconData = Icons.business;
-        break;
-      case 'city':
-        iconData = Icons.location_city;
-        break;
-      case 'landmark':
-        iconData = Icons.account_balance;
-        break;
-      case 'road':
-        iconData = Icons.add_road;
-        break;
-      case 'tree':
-        iconData = Icons.park;
-        break;
-      case 'water':
-        iconData = Icons.water;
-        break;
-      case 'trash':
-        iconData = Icons.delete;
-        break;
-      case 'bus':
-        iconData = Icons.directions_bus;
-        break;
-      case 'users':
-        iconData = Icons.people;
-        break;
-      case 'sack-dollar':
-        iconData = Icons.attach_money;
-        break;
-      default:
-        iconData = Icons.business;
-        break;
-    }
-
-    return Icon(
-      iconData,
-      size: 28,
-      color: theme.colorScheme.primary,
     );
   }
 }
