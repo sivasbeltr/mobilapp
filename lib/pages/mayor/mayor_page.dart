@@ -15,7 +15,7 @@ class MayorPage extends StatefulWidget {
 
 class _MayorPageState extends State<MayorPage> {
   final ScrollController _scrollController = ScrollController();
-  bool _isAppBarExpanded = false;
+  double _scrollOffset = 0;
   final String _mayorImageUrl =
       'https://www.sivas.bel.tr/upload/personnel/dr-adem-uzun/dr-adem-uzun_8910.jpg';
 
@@ -39,12 +39,19 @@ class _MayorPageState extends State<MayorPage> {
 
   void _onScroll() {
     if (_scrollController.hasClients) {
-      final expanded = _scrollController.offset < 200;
-      if (_isAppBarExpanded != expanded) {
-        setState(() {
-          _isAppBarExpanded = expanded;
-        });
-      }
+      setState(() {
+        _scrollOffset = _scrollController.offset;
+      });
+    }
+  }
+
+  double _getTitleOpacity() {
+    if (_scrollOffset < 230) {
+      return 0.0;
+    } else if (_scrollOffset >= 280) {
+      return 1.0;
+    } else {
+      return (_scrollOffset - 230) / 50;
     }
   }
 
@@ -65,7 +72,7 @@ class _MayorPageState extends State<MayorPage> {
               backgroundColor: theme.colorScheme.primary,
               flexibleSpace: FlexibleSpaceBar(
                 title: AnimatedOpacity(
-                  opacity: _isAppBarExpanded ? 0.0 : 1.0,
+                  opacity: _getTitleOpacity(),
                   duration: const Duration(milliseconds: 200),
                   child: Text(
                     'DR. ADEM UZUN- Belediye Başkanı',

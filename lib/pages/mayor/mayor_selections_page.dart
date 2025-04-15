@@ -78,7 +78,8 @@ class _MayorSelectionsPageState extends State<MayorSelectionsPage>
       backgroundColor: Theme.of(context).colorScheme.surface,
       appBar: PagesAppBar(
         title: 'Başkandan Seçmeler',
-        backgroundColor: Colors.transparent,
+        useRoundedBottom: false,
+        useGradientBackground: true,
       ),
       body: _buildBody(context),
     );
