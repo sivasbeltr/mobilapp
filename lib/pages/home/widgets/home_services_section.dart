@@ -26,15 +26,15 @@ class HomeServicesSection extends StatelessWidget {
         child: const Text('Tümü'),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 6), // Reduced padding
         child: GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            childAspectRatio: 0.88,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
+            childAspectRatio: 1.0, // Perfect square (1:1 ratio)
+            crossAxisSpacing: 8, // Reduced spacing
+            mainAxisSpacing: 8, // Reduced spacing
           ),
           itemCount: services.length > 9
               ? 9

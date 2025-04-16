@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../main.dart';
+import '../../user/user_page.dart';
 
 /// A clean AppBar for the home page with the Sivas Municipality logo and theme toggle.
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -40,13 +41,16 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       ),
       actions: [
-        // Search action
+        // User profile action
         IconButton(
-          icon: const Icon(Icons.search, color: Colors.white),
+          icon: const Icon(Icons.account_circle_outlined, color: Colors.white),
           onPressed: () {
-            // TODO: Implement search functionality
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const UserPage()),
+            );
           },
-          tooltip: 'Ara',
+          tooltip: 'Profil',
         ),
 
         // Theme toggle action

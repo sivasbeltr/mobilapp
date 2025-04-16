@@ -30,7 +30,8 @@ class SharedSectionContainer extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: const EdgeInsets.symmetric(
+          horizontal: 12, vertical: 6), // Reduced horizontal margin
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
@@ -64,12 +65,13 @@ class SharedSectionContainer extends StatelessWidget {
                 ),
               ),
             ),
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
+            padding:
+                const EdgeInsets.fromLTRB(14, 14, 14, 10), // Reduced padding
             child: Row(
               children: [
                 // Section icon with gradient background
                 Container(
-                  padding: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(6), // Reduced padding
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
@@ -87,7 +89,7 @@ class SharedSectionContainer extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: 10), // Reduced spacing
                 // Section title
                 Text(
                   title,
@@ -108,9 +110,9 @@ class SharedSectionContainer extends StatelessWidget {
             ),
           ),
 
-          // Content with consistent padding
+          // Content with reduced padding
           Padding(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(8), // Reduced padding
             child: child,
           ),
         ],
@@ -141,16 +143,16 @@ class SharedGridItem extends StatelessWidget {
 
     return Material(
       color: Colors.transparent,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(10), // Reduced border radius
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10), // Reduced border radius
         splashColor: color.withAlpha(40),
         highlightColor: color.withAlpha(20),
         child: Ink(
           decoration: BoxDecoration(
             color: isDark ? color.withAlpha(25) : color.withAlpha(15),
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10), // Reduced border radius
             border: Border.all(
               color: color.withAlpha(isDark ? 40 : 30),
               width: 1,
@@ -160,12 +162,12 @@ class SharedGridItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               // Fixed height for top padding
-              const SizedBox(height: 12),
+              const SizedBox(height: 8), // Reduced spacing
 
               // Icon with gradient - in a fixed position
               Container(
-                width: 48,
-                height: 48,
+                width: 44, // Reduced size
+                height: 44, // Reduced size
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
@@ -187,22 +189,23 @@ class SharedGridItem extends StatelessWidget {
                 child: Icon(
                   icon,
                   color: Colors.white,
-                  size: 24,
+                  size: 22, // Reduced size
                 ),
               ),
 
               // Fixed height spacing
-              const SizedBox(height: 10),
+              const SizedBox(height: 8), // Reduced spacing
 
               // Title with fixed height container
               Container(
-                height: 36, // Fixed height for text area
+                height: 32, // Reduced height for text area
                 alignment: Alignment.center, // Center the text vertically
-                padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 2.0), // Reduced padding
                 child: Text(
                   title,
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 11, // Reduced font size
                     fontWeight: FontWeight.w500,
                     color: isDark
                         ? AppColors.textPrimaryDark
@@ -242,7 +245,7 @@ class SharedCircularItem extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     return SizedBox(
-      width: 70, // Adjusted width for better spacing
+      width: 65,
       child: Column(
         children: [
           // Circular icon button
@@ -274,24 +277,24 @@ class SharedCircularItem extends StatelessWidget {
                   ],
                 ),
                 child: Container(
-                  width: 48, // Reduced from 60 to match grid items
-                  height: 48, // Reduced from 60 to match grid items
+                  width: 44,
+                  height: 44,
                   alignment: Alignment.center,
                   child: Icon(
                     icon,
                     color: Colors.white,
-                    size: 24, // Reduced from 28 to match grid items
+                    size: 22,
                   ),
                 ),
               ),
             ),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4), // Alt boşluk 6'dan 4'e düşürüldü
           // Title
           Text(
             title,
             style: TextStyle(
-              fontSize: 12,
+              fontSize: 11,
               fontWeight: FontWeight.w500,
               color: isDark
                   ? AppColors.textPrimaryDark

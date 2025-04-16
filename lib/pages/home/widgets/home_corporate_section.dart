@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:sivas_belediyesi/pages/meclis/meclis_page.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../corporate/corporate_page.dart';
 import '../../department/department_list_page.dart';
 import '../../deputy_mayor/deputy_mayor_list_page.dart';
 import '../../encumen/encumen_page.dart';
@@ -91,16 +91,18 @@ class HomeCorporateSection extends StatelessWidget {
         },
       ),
       CorporateMenuItem(
-        title: 'Organizasyon Şeması',
-        icon: Icons.account_tree,
-        route: '/organizasyon-semasi',
-        color: const Color(0xFFEF6C00), // Orange
-      ),
-      CorporateMenuItem(
         title: 'Kurumsal Yapı',
         icon: Icons.domain,
         route: '',
         color: const Color(0xFF4527A0), // Deep purple
+        onTap: (context) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CorporatePage(),
+            ),
+          );
+        },
       )
     ];
 
@@ -108,15 +110,15 @@ class HomeCorporateSection extends StatelessWidget {
       title: 'Kurumsal',
       icon: Icons.business_center,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 6), // Reduced padding
         child: GridView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 3,
-            childAspectRatio: 0.88,
-            crossAxisSpacing: 12,
-            mainAxisSpacing: 12,
+            childAspectRatio: 1.0, // Perfect square (1:1 ratio)
+            crossAxisSpacing: 8, // Reduced spacing
+            mainAxisSpacing: 8, // Reduced spacing
           ),
           itemCount: menuItems.length,
           itemBuilder: (context, index) {

@@ -116,16 +116,17 @@ class _HomeQuickAccessState extends State<HomeQuickAccess> {
       icon: Icons.flash_on,
       trailing: _buildScrollIndicator(),
       child: SizedBox(
-        height: 100,
+        height: 85, // Reduced height
         child: ListView.builder(
           controller: _scrollController,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 6), // Reduced padding
           scrollDirection: Axis.horizontal,
           itemCount: quickAccessItems.length,
           itemBuilder: (context, index) {
             final item = quickAccessItems[index];
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 4), // Reduced item padding
               child: SharedCircularItem(
                 icon: item.icon,
                 title: item.label,
